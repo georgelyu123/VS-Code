@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="The personal homepage of George Lyu — reader, gamer, and flautist."
+    />
+    <title>George Lyu — Personal site</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&amp;family=Source+Sans+3:wght@400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="site-header">
+      <a class="wordmark" href="#top" aria-label="George Lyu home">
+        <span class="wordmark-mark" aria-hidden="true">G</span>
+        <span>
+          <strong>George Lyu</strong>
+          <small>personal notes</small>
+        </span>
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#about">About</a>
+        <a href="#interests">Interests</a>
+        <a href="#music">Music</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <aside class="contents" aria-label="Contents">
+        <p class="contents-label">Contents</p>
+        <ol>
+          <li><a href="#about">About George</a></li>
+          <li><a href="#interests">Interests</a></li>
+          <li><a href="#music">Music</a></li>
+          <li><a href="#now">Now</a></li>
+        </ol>
+        <p class="contents-footnote">Last revised<br /><span id="today">October 2026</span></p>
+      </aside>
+
+      <article id="content">
+        <p class="eyebrow">Profile</p>
+        <h1>George Lyu</h1>
+        <p class="lede">
+          A curious reader, dedicated gamer, and classically trained flautist.
+        </p>
+
+        <div class="article-rule"></div>
+
+        <section id="about" aria-labelledby="about-heading">
+          <h2 id="about-heading">About George</h2>
+          <div class="intro-grid">
+            <div>
+              <p>
+                Hello, I’m George. I enjoy the small worlds found in a good book,
+                the larger ones found in games, and the satisfaction of learning a
+                piece of music one phrase at a time.
+              </p>
+              <p>
+                This is a quiet corner of the internet for a few things that make
+                up my world.
+              </p>
+            </div>
+            <aside class="fact-card" aria-label="Quick facts about George">
+              <div class="fact-card-title">George Lyu</div>
+              <dl>
+                <div><dt>Interests</dt><dd>Gaming · Reading</dd></div>
+                <div><dt>Instrument</dt><dd>Flute</dd></div>
+                <div><dt>Experience</dt><dd>6 years</dd></div>
+                <div><dt>Qualification</dt><dd>ABRSM Grade 8</dd></div>
+              </dl>
+            </aside>
+          </div>
+        </section>
+
+        <section id="interests" aria-labelledby="interests-heading">
+          <h2 id="interests-heading">Interests</h2>
+          <div class="interest-grid">
+            <article class="interest-item">
+              <span class="interest-number" aria-hidden="true">01</span>
+              <div>
+                <h3>Gaming</h3>
+                <p>
+                  I like games for their challenges, their stories, and the joy of
+                  discovering a new place with friends or on my own.
+                </p>
+              </div>
+            </article>
+            <article class="interest-item">
+              <span class="interest-number" aria-hidden="true">02</span>
+              <div>
+                <h3>Reading</h3>
+                <p>
+                  A good book is one of my favourite ways to slow down, follow an
+                  idea, and see the world through someone else’s eyes.
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="music" aria-labelledby="music-heading">
+          <h2 id="music-heading">Music</h2>
+          <div class="music-layout">
+            <div class="music-note" aria-hidden="true">
+              <span>♩</span><span>♫</span><span>♪</span>
+            </div>
+            <div>
+              <p>
+                I played the flute for six years and have achieved <strong>ABRSM
+                Grade 8</strong>. It taught me patience, careful listening, and how
+                much can be said without a single word.
+              </p>
+              <p class="pull-quote">“Every note has a place.”</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="now" class="now-section" aria-labelledby="now-heading">
+          <div>
+            <p class="eyebrow">Currently</p>
+            <h2 id="now-heading">What I’m working on</h2>
+          </div>
+          <p>
+            Nothing public at the moment. I’m leaving some room for the next good
+            idea.
+          </p>
+        </section>
+      </article>
+    </main>
+
+    <footer>
+      <span>© <span id="year">2026</span> George Lyu</span>
+      <span>Made as a personal reference page.</span>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>

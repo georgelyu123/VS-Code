@@ -4,6 +4,7 @@ import { randomUUID, timingSafeEqual } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { isIP } from 'node:net';
 import { Agent, run, tool, webSearchTool } from '@openai/agents';
+import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 
 const PORT = Number(process.env.PORT || 8080);
@@ -49,6 +50,55 @@ function logTool(job, entry) {
   const record = { at: new Date().toISOString(), ...entry };
   job.toolCalls.push(record);
   console.log(`[job ${job.id}] ${JSON.stringify(record)}`);
+}
+
+function supabase() {
+  const url = process.env.SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_KEY;
+  if (!url || !serviceKey) {
+    throw new Error('SUPABASE_URL and SUPABASE_SERVICE_KEY must be set to save opportunities.');
+  }
+  return createClient(url, serviceKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+}
+
+async function update_site(job, item) {
+  const url = item.availabilityEvidence.url;
+  const client = supabase();
+  const { data: existing, error: lookupError } = await client
+    .from('opportunities')
+    .select('id')
+    .eq('url', url)
+    .maybeSingle();
+
+  if (lookupError) throw new Error(`Could not check ${url}: ${lookupError.message}`);
+  if (existing) {
+    logTool(job, { tool: 'update_site', status: 'skipped', url, reason: 'URL already exists', id: existing.id });
+    return { saved: false, id: existing.id };
+  }
+
+  const sourceExcerpt = `Eligibility: ${item.eligibilityEvidence.excerpt}\n\nAvailability: ${item.availabilityEvidence.excerpt}`;
+  const { data, error } = await client
+    .from('opportunities')
+    .insert({
+      title: item.name,
+      url,
+      source_excerpt: sourceExcerpt,
+      why_it_fits: item.whyItFits,
+      status: 'new',
+    })
+    .select('id')
+    .single();
+
+  if (error?.code === '23505') {
+    logTool(job, { tool: 'update_site', status: 'skipped', url, reason: 'URL already exists' });
+    return { saved: false };
+  }
+  if (error) throw new Error(`Could not save ${url}: ${error.message}`);
+
+  logTool(job, { tool: 'update_site', status: 'saved', url, id: data.id });
+  return { saved: true, id: data.id };
 }
 
 function isPublicHttpsUrl(value) {
@@ -234,6 +284,9 @@ async function runJob(job) {
     logTool(job, { tool: 'checking_matches', status: 'started' });
     job.results = auditReport(streamed.finalOutput);
     logTool(job, { tool: 'checking_matches', status: 'completed' });
+    for (const item of job.results.verified) {
+      await update_site(job, item);
+    }
     job.status = 'completed';
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server';
+import { hasSitePassword } from '../../../../../../lib/site-password';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-export async function POST(_request, { params }) {
+export async function POST(request, { params }) {
   try {
+    const { password } = await request.json().catch(() => ({}));
+    if (!hasSitePassword(password)) {
+      return NextResponse.json({ error: 'Incorrect site password.' }, { status: 401 });
+    }
     const { id } = await params;
     const baseUrl = process.env.AGENT_URL?.replace(/\/$/, '');
     const secret = process.env.AGENT_SECRET;

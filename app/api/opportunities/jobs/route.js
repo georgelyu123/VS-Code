@@ -1,15 +1,8 @@
 import { NextResponse } from 'next/server';
-import { timingSafeEqual } from 'node:crypto';
+import { hasSitePassword } from '../../../../lib/site-password';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-
-function matchesPassword(supplied, expected) {
-  if (typeof supplied !== 'string' || !expected) return false;
-  const left = Buffer.from(supplied);
-  const right = Buffer.from(expected);
-  return left.length === right.length && timingSafeEqual(left, right);
-}
 
 function agentConfig() {
   const { AGENT_URL, AGENT_SECRET } = process.env;
@@ -19,8 +12,8 @@ function agentConfig() {
 
 export async function POST(request) {
   try {
-    const { password } = await request.json();
-    if (!matchesPassword(password, process.env.SITE_PASSWORD)) {
+    const { password } = await request.json().catch(() => ({}));
+    if (!hasSitePassword(password)) {
       return NextResponse.json({ error: 'Incorrect site password.' }, { status: 401 });
     }
     const { baseUrl, secret } = agentConfig();
